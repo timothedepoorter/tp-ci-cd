@@ -1,0 +1,68 @@
+services:
+  redis:
+    image: redis:5.0-alpine3.10
+    container_name: redis_db
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+    command: ["redis-server", "--appendonly", "yes"]
+
+  postgres:
+    image: postgres:9.4
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  vote_app:
+    build:
+      context: ./vote
+    container_name: vote_app
+    ports:
+      - "80:80"
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - app-network
+
+  results_app:
+    build:
+      context: ./result
+    container_name: results_app
+    ports:
+      - "3000:4000"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  worker:
+    build:
+      context: ./worker
+    container_name: worker_app
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - app-network
+
+volumes:
+  redis_data:
+    driver: local
+  postgres_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
