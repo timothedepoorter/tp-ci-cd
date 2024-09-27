@@ -16,3 +16,6 @@ jobs:
 
       - name: Build the Docker image for worker
         run: docker build ./worker/ --file ./worker/Dockerfile --tag worker:$(date +%s)
+
+      - name: Push result image to Docker Hub
+        run: docker push timothedepoorter/result:latest
