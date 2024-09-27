@@ -8,4 +8,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build the Docker image for result
-        run: docker build ./result --file Dockerfile --tag result:$(date +%s)
+        run: docker build ./result/ --file Dockerfile --tag result:$(date +%s)
