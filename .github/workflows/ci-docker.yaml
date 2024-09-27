@@ -22,3 +22,9 @@ jobs:
 
       - name: Push result image to Docker Hub
         run: docker push timothedepoorter/result
+
+      - name: Push vote image to Docker Hub
+        run: docker push timothedepoorter/vote
+
+      - name: Push worker image to Docker Hub
+        run: docker push timothedepoorter/worker
